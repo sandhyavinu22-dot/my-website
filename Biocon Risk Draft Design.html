@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERM Risk Register</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        :root {
+            --primary: #0f4c75;
+            --primary-light: #3282b8;
+            --primary-dark: #0b2545;
+            --accent: #1b262c;
+            --accent-light: #bbe1fa;
+            --bg: #f0f4f8;
+            --white: #ffffff;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --text-muted: #94a3b8;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+            --shadow: 0 4px 16px rgba(0,0,0,0.08);
+            --shadow-lg: 0 8px 30px rgba(0,0,0,0.12);
+            --radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ========== NAVIGATION ========== */
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            padding: 0;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        .nav-tab {
+            padding: 1rem 1.4rem;
+            color: rgba(255,255,255,0.6);
+            cursor: pointer;
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            border-bottom: 3px solid transparent;
+            transition: var(--transition);
+            position: relative;
+        }
+        .nav-tab:hover { color: rgba(255,255,255,0.95); background: rgba(255,255,255,0.05); }
+        .nav-tab.active {
+            color: #fff;
+            border-bottom-color: var(--accent-light);
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* ========== CONTAINER ========== */
+        .container { max-width: 1140px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+        .phase-section { display: none; animation: fadeIn 0.4s ease; }
+        .phase-section.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ========== SECTION TITLES ========== */
+        .section-title {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 2rem 0 1.2rem;
+            padding-bottom: 0.6rem;
+            border-bottom: 3px solid var(--primary-light);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .section-title .icon { font-size: 1.3rem; }
+
+        /* ========== ERM WORKFLOW TABLE ========== */
+        .wf-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 1.5rem 0;
+            background: var(--white);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        .wf-table th {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: var(--white);
+            padding: 0.9rem 1.2rem;
+            text-align: left;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            font-weight: 700;
+        }
+        .wf-table td { padding: 0.8rem 1.2rem; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        .wf-table tr:last-child td { border-bottom: none; }
+        .wf-table tr { transition: var(--transition); }
+        .wf-table tr:hover td { background: #f0f7ff; }
+        .wf-table .stage-num { font-weight: 800; color: var(--primary); white-space: nowrap; }
+        .wf-table .stage-archive { background: #f8fafc; }
+
+        /* ========== RISK REGISTER OVERVIEW TABLE ========== */
+        .overview-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 1rem 0;
+            background: var(--white);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        .overview-table th {
+            background: linear-gradient(135deg, var(--accent), #2d3748);
+            color: var(--white);
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            font-weight: 700;
+        }
+        .overview-table td {
+            padding: 0.6rem 1rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.85rem;
+        }
+        .overview-table tr:last-child td { border-bottom: none; }
+        .overview-table tr { transition: var(--transition); }
+        .overview-table tr:hover td { background: #f0f7ff; }
+        .overview-table .phase-label {
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        .phase-label.pl-identify { background: #dbeafe; color: #1e40af; }
+        .phase-label.pl-assess { background: #fef3c7; color: #92400e; }
+        .phase-label.pl-respond { background: #d1fae5; color: #065f46; }
+        .phase-label.pl-residual { background: #fce7f3; color: #9d174d; }
+
+        /* ========== FIELD CARDS ========== */
+        .field-grid { display: grid; grid-template-columns: 1fr; gap: 0.7rem; margin-bottom: 2rem; }
+        .field-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 1.1rem 1.3rem;
+            box-shadow: var(--shadow-sm);
+            display: grid;
+            grid-template-columns: 46px 1fr 1.6fr;
+            align-items: center;
+            gap: 1rem;
+            border-left: 4px solid var(--primary-light);
+            transition: var(--transition);
+        }
+        .field-card:hover { transform: translateX(4px); box-shadow: var(--shadow); }
+        .field-card.phase-identify { border-left-color: #3b82f6; }
+        .field-card.phase-assess { border-left-color: #f59e0b; }
+        .field-card.phase-respond { border-left-color: #10b981; }
+
+        .field-num {
+            width: 38px; height: 38px;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 0.82rem; color: var(--white);
+        }
+        .phase-identify .field-num { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+        .phase-assess .field-num { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .phase-respond .field-num { background: linear-gradient(135deg, #10b981, #059669); }
+
+        .field-name { font-weight: 700; font-size: 0.92rem; color: var(--accent); }
+        .field-desc { font-size: 0.85rem; color: var(--text-light); line-height: 1.5; }
+
+        /* ========== FIELD TYPE BADGES ========== */
+        .type-badge {
+            display: inline-block;
+            padding: 0.12rem 0.45rem;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: 0.4rem;
+            vertical-align: middle;
+        }
+        .type-text { background: #eff6ff; color: #2563eb; }
+        .type-paragraph { background: #fefce8; color: #a16207; }
+        .type-dropdown { background: #ecfdf5; color: #059669; }
+        .type-auto { background: #faf5ff; color: #7c3aed; }
+        .type-date { background: #fef2f2; color: #dc2626; }
+        .type-userlookup { background: #eff6ff; color: #0f4c75; }
+        .type-attachment { background: #fff7ed; color: #c2410c; }
+        .type-tree { background: #ecfdf5; color: #047857; }
+        .type-relationship { background: #faf5ff; color: #7c3aed; }
+
+        /* ========== LEGEND ========== */
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            padding: 0.9rem 1.2rem;
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+        .legend-title { font-weight: 700; font-size: 0.8rem; color: var(--accent); margin-right: 0.3rem; align-self: center; }
+
+        /* ========== FORMULA BOX ========== */
+        .formula-box {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: var(--white);
+            border-radius: var(--radius);
+            padding: 1.8rem;
+            text-align: center;
+            margin: 1.5rem 0;
+            box-shadow: var(--shadow-lg);
+        }
+        .formula-box .formula { font-size: 1.4rem; font-weight: 800; margin: 0.5rem 0; letter-spacing: 1px; }
+        .formula-box .formula-label { font-size: 0.75rem; opacity: 0.7; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; }
+
+        /* ========== ACTION PLAN WORKFLOW ========== */
+        .ap-workflow {
+            display: flex;
+            align-items: stretch;
+            justify-content: center;
+            gap: 0;
+            margin: 1.5rem 0;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+        }
+        .ap-step {
+            padding: 0.8rem 0.6rem;
+            border-radius: var(--radius);
+            font-weight: 700;
+            font-size: 0.78rem;
+            color: var(--white);
+            text-align: center;
+            min-width: 130px;
+            flex: 1;
+            max-width: 190px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+        .ap-step:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+        .ap-open { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+        .ap-approval { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .ap-closed { background: linear-gradient(135deg, #10b981, #059669); }
+        .ap-archived { background: linear-gradient(135deg, #64748b, #475569); }
+        .ap-monitor { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+        .ap-arrow { font-size: 1.3rem; color: var(--primary-light); font-weight: 700; padding: 0 0.2rem; display: flex; align-items: center; }
+        .ap-step-title { font-size: 0.75rem; font-weight: 800; margin-bottom: 0.2rem; }
+        .ap-step-desc { font-weight: 400; font-size: 0.65rem; opacity: 0.9; line-height: 1.3; }
+
+        /* ========== SCALE TABLE ========== */
+        .scale-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 1rem 0;
+            background: var(--white);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        .scale-table th {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: var(--white);
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            font-weight: 700;
+        }
+        .scale-table td { padding: 0.6rem 1rem; border-bottom: 1px solid var(--border); font-size: 0.88rem; }
+        .scale-table tr:last-child td { border-bottom: none; }
+        .scale-table tr { transition: var(--transition); }
+        .scale-table tr:hover td { background: #f0f7ff; }
+
+        /* ========== BADGES ========== */
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.7rem;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .badge-low { background: #d1fae5; color: #065f46; }
+        .badge-medium { background: #fef3c7; color: #92400e; }
+        .badge-high { background: #fee2e2; color: #991b1b; }
+
+        /* ========== ROLES & PERMISSIONS ========== */
+        .perm-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 1rem 0;
+            background: var(--white);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            font-size: 0.85rem;
+        }
+        .perm-table th {
+            background: linear-gradient(135deg, #4c1d95, #6d28d9);
+            color: var(--white);
+            padding: 0.75rem 0.8rem;
+            text-align: center;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 700;
+        }
+        .perm-table th:first-child { text-align: left; }
+        .perm-table td { padding: 0.6rem 0.8rem; border-bottom: 1px solid var(--border); text-align: center; }
+        .perm-table td:first-child { text-align: left; font-weight: 600; }
+        .perm-table tr:last-child td { border-bottom: none; }
+        .perm-table tr { transition: var(--transition); }
+        .perm-table tr:hover td { background: #faf5ff; }
+        .perm-rw { background: #d1fae5; color: #065f46; font-weight: 700; border-radius: 4px; padding: 0.15rem 0.4rem; font-size: 0.75rem; }
+        .perm-r { background: #dbeafe; color: #1e40af; font-weight: 700; border-radius: 4px; padding: 0.15rem 0.4rem; font-size: 0.75rem; }
+        .perm-locked { background: #f1f5f9; color: #94a3b8; font-weight: 700; border-radius: 4px; padding: 0.15rem 0.4rem; font-size: 0.75rem; }
+        .perm-approve { background: #fef3c7; color: #92400e; font-weight: 700; border-radius: 4px; padding: 0.15rem 0.4rem; font-size: 0.75rem; }
+
+        /* ========== GOVERNANCE ========== */
+        .gov-layer {
+            text-align: center;
+            padding: 0.9rem;
+            margin: 0.4rem auto;
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 0.9rem;
+            max-width: 600px;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+        }
+        .gov-layer:hover { transform: scale(1.02); box-shadow: var(--shadow); }
+        .gov-1 { background: linear-gradient(135deg, var(--primary-dark), var(--primary)); color: var(--white); }
+        .gov-2 { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: var(--white); }
+        .gov-3 { background: linear-gradient(135deg, #3282b8, #5dade2); color: var(--white); }
+        .gov-4 { background: #dbeafe; color: var(--accent); }
+        .gov-5 { background: #e0f2fe; color: var(--accent); }
+        .gov-arrow { text-align: center; font-size: 1.1rem; color: var(--primary-light); font-weight: 700; }
+
+        /* ========== NOTE BOX ========== */
+        .note-box {
+            background: linear-gradient(135deg, #eff6ff, #dbeafe);
+            border-left: 4px solid var(--primary-light);
+            border-radius: var(--radius);
+            padding: 1.1rem 1.3rem;
+            margin: 1rem 0;
+            font-size: 0.88rem;
+            box-shadow: var(--shadow-sm);
+        }
+        .note-box strong { color: var(--primary); }
+
+        /* ========== DOMAIN TAGS ========== */
+        .domain-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.3rem; }
+        .domain-tag {
+            background: #eff6ff;
+            color: var(--primary);
+            padding: 0.15rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            border: 1px solid #bfdbfe;
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            border-top: 1px solid var(--border);
+            margin-top: 2.5rem;
+            font-weight: 500;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .field-card { grid-template-columns: 40px 1fr; gap: 0.6rem; }
+            .field-desc { grid-column: 1 / -1; }
+            .nav-tab { padding: 0.7rem 0.7rem; font-size: 0.68rem; }
+            .ap-workflow { flex-direction: column; align-items: center; }
+            .ap-arrow { transform: rotate(90deg); }
+            .perm-table { font-size: 0.75rem; }
+            .perm-table th, .perm-table td { padding: 0.5rem 0.4rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="nav-tabs">
+        <div class="nav-tab active" onclick="showTab('overview')">Overview</div>
+        <div class="nav-tab" onclick="showTab('identify')">1. Identify</div>
+        <div class="nav-tab" onclick="showTab('assess')">2. Inherent Assessment</div>
+        <div class="nav-tab" onclick="showTab('respond')">3. Respond</div>
+        <div class="nav-tab" onclick="showTab('residual')">4. Residual Assessment</div>
+        <div class="nav-tab" onclick="showTab('monitor')">5. Monitor & Re-assessment</div>
+        <div class="nav-tab" onclick="showTab('archival')">6. Archival Approval</div>
+        <div class="nav-tab" onclick="showTab('roles')">Roles & Permissions</div>
+        <div class="nav-tab" onclick="showTab('governance')">Governance</div>
+    </div>
+
+    <div class="container">
+
+        <!-- ==================== OVERVIEW ==================== -->
+        <div id="overview" class="phase-section active">
+
+            <h2 class="section-title"><span class="icon">📋</span> ERM Workflow — Stages</h2>
+            <table class="wf-table">
+                <thead><tr><th style="width:30%;">Stage</th><th>What Happens</th></tr></thead>
+                <tbody>
+                    <tr><td class="stage-num">1. Identification</td><td>Risks are identified, documented with risk statement, contributing factors, and ownership assigned</td></tr>
+                    <tr><td class="stage-num">2. Analysis</td><td>Inherent likelihood and impact are analyzed across five capitals</td></tr>
+                    <tr><td class="stage-num">3. Assessment</td><td><strong>Inherent Risk Score (IRS)</strong> is calculated using the formula and mapped to a rating</td></tr>
+                    <tr><td class="stage-num">4. Response / Treatment</td><td>Controls are assigned, action plans are created with defined ownership and target dates</td></tr>
+                    <tr><td class="stage-num">5. Residual Risk Assessment</td><td><strong>Residual Risk Score (RRS)</strong> is calculated — after factoring in the effectiveness of controls and treatment actions</td></tr>
+                    <tr><td class="stage-num">6. Approval</td><td>Risk and treatment plans are reviewed and approved by Risk Owner / Risk Champion</td></tr>
+                    <tr><td class="stage-num">7. Monitoring & Reassessment</td><td>Ongoing tracking; residual risk is periodically reassessed</td></tr>
+                    <tr><td class="stage-num">8. Archival Approval</td><td>Before archiving, the Risk Owner / Risk Champion reviews and approves the archival request. An <strong>Archival Rationale</strong> must be documented to justify why the risk is being archived.</td></tr>
+                    <tr class="stage-archive"><td class="stage-num" style="color:#64748b;">9. Archive</td><td>Once approved, risks are archived. Retained for audit trail and can be reactivated if conditions change.</td></tr>
+                </tbody>
+            </table>
+
+            <div class="formula-box">
+                <div class="formula-label">Risk Score Formula</div>
+                <div class="formula">( Impact × Likelihood ) + Velocity</div>
+                <div class="formula-label" style="margin-top:1rem;">Risk Rating Scale</div>
+                <div style="margin-top:0.6rem;">
+                    <span class="badge badge-high" style="font-size:0.82rem;">High ≥ 18</span>&nbsp;&nbsp;
+                    <span class="badge badge-medium" style="font-size:0.82rem;">Medium 8–17</span>&nbsp;&nbsp;
+                    <span class="badge badge-low" style="font-size:0.82rem;">Low / Acceptable < 8</span>
+                </div>
+            </div>
+
+            <h2 class="section-title"><span class="icon">📊</span> Risk Register — Key Fields Overview</h2>
+            <table class="overview-table">
+                <thead><tr><th>Phase</th><th>#</th><th>Field Name</th><th>Field Type</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="phase-label pl-identify">Identify</span></td><td>1</td><td>Risk Ref. No.</td><td><span class="type-badge type-text">Text</span></td></tr>
+                    <tr><td><span class="phase-label pl-identify">Identify</span></td><td>2</td><td>Function</td><td><span class="type-badge type-dropdown">Dropdown</span></td></tr>
+                    <tr><td><span class="phase-label pl-identify">Identify</span></td><td>3</td><td>Company Name</td><td><span class="type-badge type-tree">Tree Structure</span></td></tr>
+                    <tr><td><span class="phase-label pl-identify">Identify</span></td><td>4</td><td>Internal / External</td><td><span class="type-badge type-dropdown">Dropdown</span></td></tr>
+                    <tr><td><span class="phase-label pl-identify">Identify</span></td><td>5</td><td>Risk Category (Risk Domain)</td><td><span class="type-badge type-dropdown">Dropdown</span></td></tr>
+                    <tr><td><span class="phase-label pl-identify">Identify</span></td><td>6</td><td>Risk Statement</td><td><span class="type-badge type-paragraph">Paragraph</span></td></tr>
+                    <tr><td><span class="phase-label pl-identify">Identify</span></td><td>7</td><td>Contributing Factors</td><td><span class="type-badge type-paragraph">Paragraph</span></td></tr>
+                    <tr><td><span class="phase-label pl-identify">Identify</span></td><td>8</td><td>Risk Owner</td><td><span class="type-badge type-userlookup">User Lookup</span></td></tr>
+                    <tr><td><span class="phase-label pl-identify">Identify</span></td><td>9</td><td>Risk Champion</td><td><span class="type-badge type-userlookup">User Lookup</span></td></tr>
+                    <tr><td><span class="phase-label pl-identify">Identify</span></td><td>10</td><td>HOD (Head of Department)</td><td><span class="type-badge type-userlookup">User Lookup</span></td></tr>
+                    <tr><td><span class="phase-label pl-assess">Assess</span></td><td>10a–e</td><td>Capital Impacts (Fin, Comp, Human, Natural, Intellectual)</td><td><span class="type-badge type-dropdown">Dropdown</span></td></tr>
+                    <tr><td><span class="phase-label pl-assess">Assess</span></td><td>10</td><td>Final Impact Score</td><td><span class="type-badge type-auto">Auto</span></td></tr>
+                    <tr><td><span class="phase-label pl-assess">Assess</span></td><td>11</td><td>Inherent Likelihood</td><td><span class="type-badge type-dropdown">Dropdown</span></td></tr>
+                    <tr><td><span class="phase-label pl-assess">Assess</span></td><td>12</td><td>Velocity</td><td><span class="type-badge type-dropdown">Dropdown</span></td></tr>
+                    <tr><td><span class="phase-label pl-assess">Assess</span></td><td>13</td><td>Inherent Risk Score</td><td><span class="type-badge type-auto">Auto</span></td></tr>
+                    <tr><td><span class="phase-label pl-assess">Assess</span></td><td>14</td><td>Inherent Risk Rating</td><td><span class="type-badge type-auto">Auto</span></td></tr>
+                    <tr><td><span class="phase-label pl-respond">Respond</span></td><td>15</td><td>Existing Controls</td><td><span class="type-badge type-relationship">Relationship</span></td></tr>
+                    <tr><td><span class="phase-label pl-respond">Respond</span></td><td>16</td><td>Action Plan</td><td><span class="type-badge type-paragraph">Paragraph</span></td></tr>
+                    <tr><td><span class="phase-label pl-respond">Respond</span></td><td>17</td><td>Action Plan Status</td><td><span class="type-badge type-dropdown">Dropdown</span></td></tr>
+                    <tr><td><span class="phase-label pl-respond">Respond</span></td><td>18</td><td>Evidence / Attachment</td><td><span class="type-badge type-attachment">Attachment</span></td></tr>
+                    <tr><td><span class="phase-label pl-respond">Respond</span></td><td>19</td><td>Risk Response Owner</td><td><span class="type-badge type-userlookup">User Lookup</span></td></tr>
+                    <tr><td><span class="phase-label pl-respond">Respond</span></td><td>20</td><td>Response Strategy</td><td><span class="type-badge type-dropdown">Dropdown</span></td></tr>
+                    <tr><td><span class="phase-label pl-respond">Respond</span></td><td>21</td><td>Status of Implementation</td><td><span class="type-badge type-dropdown">Dropdown</span></td></tr>
+                    <tr><td><span class="phase-label pl-respond">Respond</span></td><td>22</td><td>Target Date</td><td><span class="type-badge type-date">Date</span></td></tr>
+                    <tr><td><span class="phase-label pl-residual">Residual</span></td><td>23</td><td>Residual Impact</td><td><span class="type-badge type-dropdown">Dropdown</span></td></tr>
+                    <tr><td><span class="phase-label pl-residual">Residual</span></td><td>24</td><td>Residual Likelihood</td><td><span class="type-badge type-dropdown">Dropdown</span></td></tr>
+                    <tr><td><span class="phase-label pl-residual">Residual</span></td><td>25</td><td>Residual Risk Score</td><td><span class="type-badge type-auto">Auto</span></td></tr>
+                    <tr><td><span class="phase-label pl-residual">Residual</span></td><td>26</td><td>Residual Risk Rating</td><td><span class="type-badge type-auto">Auto</span></td></tr>
+                    <tr><td><span class="phase-label pl-residual">Residual</span></td><td>27</td><td>Reportable As</td><td><span class="type-badge type-dropdown">Dropdown</span></td></tr>
+                    <tr><td><span class="phase-label pl-residual">Residual</span></td><td>28</td><td>Reportable To</td><td><span class="type-badge type-text">Text</span></td></tr>
+                    <tr><td><span class="phase-label pl-residual">Archival</span></td><td>29</td><td>Archival Rationale</td><td><span class="type-badge type-paragraph">Paragraph</span></td></tr>
+                </tbody>
+            </table>
+
+            <h2 class="section-title"><span class="icon">🔄</span> Response Strategies</h2>
+            <table class="scale-table">
+                <thead><tr><th>Strategy</th><th>Description</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>Treat</strong></td><td>Implement controls to reduce the likelihood or impact of the risk</td></tr>
+                    <tr><td><strong>Tolerate</strong></td><td>Accept the risk within appetite — monitor but take no further action</td></tr>
+                    <tr><td><strong>Transfer</strong></td><td>Shift the risk to a third party (e.g., insurance, outsourcing)</td></tr>
+                    <tr><td><strong>Terminate</strong></td><td>Avoid the risk entirely by ceasing the activity that creates it</td></tr>
+                    <tr><td><strong>Exploit</strong></td><td>Take advantage of an upside risk / opportunity</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ==================== PHASE 1: IDENTIFY ==================== -->
+        <div id="identify" class="phase-section">
+            <h2 class="section-title"><span class="icon">🔍</span> Phase 1 — Risk Identification</h2>
+            <p style="margin-bottom:1rem;color:var(--text-light);">Every risk starts here. Capture these fields to fully document a risk before assessment.</p>
+
+            <div class="legend">
+                <span class="legend-title">Field Types:</span>
+                <span class="type-badge type-text">Text</span>
+                <span class="type-badge type-paragraph">Paragraph</span>
+                <span class="type-badge type-dropdown">Dropdown</span>
+                <span class="type-badge type-userlookup">User Lookup</span>
+                <span class="type-badge type-tree">Tree Structure</span>
+                <span class="type-badge type-auto">Auto-Calculated</span>
+                <span class="type-badge type-date">Date</span>
+                <span class="type-badge type-attachment">Attachment</span>
+                <span class="type-badge type-relationship">Relationship</span>
+            </div>
+
+            <div class="field-grid">
+                <div class="field-card phase-identify"><div class="field-num">1</div><div class="field-name">Risk Ref. No. <span class="type-badge type-text">Text</span></div><div class="field-desc">Unique identifier for the risk (e.g., IT-01, FIN-03)</div></div>
+                <div class="field-card phase-identify"><div class="field-num">2</div><div class="field-name">Function <span class="type-badge type-dropdown">Dropdown</span></div><div class="field-desc">Business or Enabling function that owns the risk (e.g., Information Technology, Finance, HR)</div></div>
+                <div class="field-card phase-identify"><div class="field-num">3</div><div class="field-name">Company Name <span class="type-badge type-tree">Multi-Select Tree</span></div><div class="field-desc">Select one or more applicable entities from the organizational hierarchy tree (multi-select enabled). The entity diagram (group structure) is incorporated here as an interactive tree for drill-down selection of relevant subsidiaries, joint ventures, or associates.</div></div>
+                <div class="field-card phase-identify"><div class="field-num">4</div><div class="field-name">Internal / External <span class="type-badge type-dropdown">Dropdown</span></div><div class="field-desc">Classify risk origin: Internal, External, or Internal & External (both)</div></div>
+                <div class="field-card phase-identify"><div class="field-num">5</div><div class="field-name">Risk Category (Risk Domain) <span class="type-badge type-dropdown">Dropdown</span></div><div class="field-desc">Categorize the risk under the appropriate Risk Domain:<div class="domain-tags"><span class="domain-tag">Financial</span><span class="domain-tag">Operational</span><span class="domain-tag">Reputational</span><span class="domain-tag">Regulatory</span><span class="domain-tag">Extended Enterprise</span><span class="domain-tag">Strategic</span><span class="domain-tag">Sustainability – ESG</span><span class="domain-tag">Sectoral</span><span class="domain-tag">Technological</span><span class="domain-tag">Talent</span></div></div></div>
+                <div class="field-card phase-identify"><div class="field-num">6</div><div class="field-name">Risk Statement <span class="type-badge type-paragraph">Paragraph</span></div><div class="field-desc">Describe: (i) What might happen, (ii) The vulnerability being exploited, (iii) Consequences on business operations</div></div>
+                <div class="field-card phase-identify"><div class="field-num">7</div><div class="field-name">Contributing Factors <span class="type-badge type-paragraph">Paragraph</span></div><div class="field-desc">Root causes and sub-causes that could lead to the risk event materializing</div></div>
+                <div class="field-card phase-identify"><div class="field-num">8</div><div class="field-name">Risk Owner <span class="type-badge type-userlookup">User Lookup</span></div><div class="field-desc">Search and select the individual who primarily owns the risk and is accountable for its management</div></div>
+                <div class="field-card phase-identify"><div class="field-num">9</div><div class="field-name">Risk Champion <span class="type-badge type-userlookup">User Lookup</span></div><div class="field-desc">Search and select the Functional Risk Champion who coordinates risk activities for this function and liaises with the ERM Team</div></div>
+                <div class="field-card phase-identify"><div class="field-num">10</div><div class="field-name">HOD (Head of Department) <span class="type-badge type-userlookup">User Lookup</span></div><div class="field-desc">Search and select the Head of Department responsible for the function. HOD has read-level visibility across all risk stages for their function.</div></div>
+            </div>
+        </div>
+
+        <!-- ==================== PHASE 2: INHERENT ASSESSMENT ==================== -->
+        <div id="assess" class="phase-section">
+            <h2 class="section-title"><span class="icon">📊</span> Phase 2 — Inherent (Gross) Risk Assessment</h2>
+            <p style="margin-bottom:1rem;color:var(--text-light);">Score the risk BEFORE any controls are applied to determine its inherent severity.</p>
+
+            <div class="field-grid">
+                <div class="field-card phase-assess"><div class="field-num">10a</div><div class="field-name">Financial Capital Impact <span class="type-badge type-dropdown">Dropdown</span></div><div class="field-desc">Impact on financial performance — Very Low (1) to Very High (5)</div></div>
+                <div class="field-card phase-assess"><div class="field-num">10b</div><div class="field-name">Compliance Capital Impact <span class="type-badge type-dropdown">Dropdown</span></div><div class="field-desc">Impact on regulatory & legal compliance — Very Low (1) to Very High (5)</div></div>
+                <div class="field-card phase-assess"><div class="field-num">10c</div><div class="field-name">Human Capital Impact <span class="type-badge type-dropdown">Dropdown</span></div><div class="field-desc">Impact on people, safety, and workforce — Very Low (1) to Very High (5)</div></div>
+                <div class="field-card phase-assess"><div class="field-num">10d</div><div class="field-name">Natural Capital Impact <span class="type-badge type-dropdown">Dropdown</span></div><div class="field-desc">Impact on environmental and natural resources — Very Low (1) to Very High (5)</div></div>
+                <div class="field-card phase-assess"><div class="field-num">10e</div><div class="field-name">Intellectual Capital Impact <span class="type-badge type-dropdown">Dropdown</span></div><div class="field-desc">Impact on intellectual property, R&D, and knowledge assets — Very Low (1) to Very High (5)</div></div>
+                <div class="field-card phase-assess" style="border-left-width:6px;border-left-color:#f59e0b;"><div class="field-num" style="background:linear-gradient(135deg,#f59e0b,#d97706);">10</div><div class="field-name">Final Impact Score <span class="type-badge type-auto">Auto-Calculated</span></div><div class="field-desc"><strong>Highest among 10a–10e.</strong> The maximum impact score across all five capitals is used as the final Impact.</div></div>
+                <div class="field-card phase-assess"><div class="field-num">11</div><div class="field-name">Inherent Likelihood (1–5) <span class="type-badge type-dropdown">Dropdown</span></div><div class="field-desc">Probability of occurrence — Unlikely 1%–20% (1), Rare 21%–40% (2), Possible 41%–60% (3), Likely 61%–80% (4), Almost Certain 81%–99% (5)</div></div>
+                <div class="field-card phase-assess"><div class="field-num">12</div><div class="field-name">Velocity (1–5) <span class="type-badge type-dropdown">Dropdown</span></div><div class="field-desc">Speed of impact — Very slow / over a year (1), Several months to a year (2), Few months to a quarter (3), Days to few weeks (4), Very rapid / few hours to days (5)</div></div>
+                <div class="field-card phase-assess"><div class="field-num">13</div><div class="field-name">Inherent Risk Score <span class="type-badge type-auto">Auto-Calculated</span></div><div class="field-desc"><strong>= (Impact × Likelihood) + Velocity</strong> — auto-calculated</div></div>
+                <div class="field-card phase-assess"><div class="field-num">14</div><div class="field-name">Inherent Risk Rating <span class="type-badge type-dropdown">Select</span></div><div class="field-desc"><span class="badge badge-high">High ≥ 18</span> <span class="badge badge-medium">Medium 8–17</span> <span class="badge badge-low">Low/Acceptable < 8</span></div></div>
+            </div>
+
+            <h3 style="margin:1.5rem 0 0.8rem;color:var(--primary);font-size:1rem;">Scoring Scales</h3>
+            <table class="scale-table">
+                <thead><tr><th>Score</th><th>Impact</th><th>Likelihood</th><th>Probability</th><th>Velocity</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>1</strong></td><td>Very Low</td><td>Unlikely</td><td>1%–20%</td><td>Very slow — over a year or more</td></tr>
+                    <tr><td><strong>2</strong></td><td>Low</td><td>Rare</td><td>21%–40%</td><td>Several months to a year</td></tr>
+                    <tr><td><strong>3</strong></td><td>Moderate</td><td>Possible</td><td>41%–60%</td><td>Few months to a quarter</td></tr>
+                    <tr><td><strong>4</strong></td><td>High</td><td>Likely</td><td>61%–80%</td><td>Days to few weeks</td></tr>
+                    <tr><td><strong>5</strong></td><td>Very High</td><td>Almost Certain</td><td>81%–99%</td><td>Very rapid — few hours to few days</td></tr>
+                </tbody>
+            </table>
+
+            <h3 style="margin:1.5rem 0 0.8rem;color:var(--primary);font-size:1rem;">Risk Rating Scale</h3>
+            <table class="scale-table">
+                <thead><tr><th>Rating</th><th>Score Range</th><th>Criteria</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="badge badge-high">High</span></td><td><strong>≥ 18</strong></td><td>Requires immediate attention and escalation</td></tr>
+                    <tr><td><span class="badge badge-medium">Medium</span></td><td><strong>8 – 17</strong></td><td>Requires active monitoring and response planning</td></tr>
+                    <tr><td><span class="badge badge-low">Low / Acceptable</span></td><td><strong>< 8</strong></td><td>Acceptable risk level — routine monitoring</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ==================== PHASE 3: RESPOND ==================== -->
+        <div id="respond" class="phase-section">
+            <h2 class="section-title"><span class="icon">🛡️</span> Phase 3 — Respond (Risk Mitigation)</h2>
+            <p style="margin-bottom:1rem;color:var(--text-light);">Risk mitigation details are captured here as <strong>Action Plans</strong>. Existing controls can be linked using <strong>Relationships</strong>.</p>
+
+            <!-- Risk Mitigation Workflow at the TOP -->
+            <h3 style="margin:0.5rem 0 0.8rem;color:var(--primary);font-size:1.05rem;font-weight:800;">Risk Mitigation Workflow</h3>
+            <div class="ap-workflow">
+                <div class="ap-step ap-open">
+                    <div class="ap-step-title">1. OPEN</div>
+                    <div class="ap-step-desc">Sent to Risk Response Owner for action</div>
+                </div>
+                <div class="ap-arrow">→</div>
+                <div class="ap-step ap-approval">
+                    <div class="ap-step-title">2. SENT FOR APPROVAL</div>
+                    <div class="ap-step-desc">Submitted to Risk Owner / Risk Champion for review</div>
+                </div>
+                <div class="ap-arrow">→</div>
+                <div class="ap-step ap-closed">
+                    <div class="ap-step-title">3. CLOSED</div>
+                    <div class="ap-step-desc">Risk Owner / Risk Champion approves & closes</div>
+                </div>
+                <div class="ap-arrow">→</div>
+                <div class="ap-step ap-archived">
+                    <div class="ap-step-title">4. ARCHIVED</div>
+                    <div class="ap-step-desc">Completed action plan archived for audit trail</div>
+                </div>
+
+            </div>
+
+            <div class="note-box">
+                <strong>💡 Existing Controls:</strong> Previously documented controls can be linked to the risk record using <strong>Relationships</strong> <span class="type-badge type-relationship">Relationship</span> — rather than re-entering them. Controls are maintained centrally and can be reused across multiple risks.
+            </div>
+
+            <div class="field-grid" style="margin-top:1.5rem;">
+                <div class="field-card phase-respond"><div class="field-num">15</div><div class="field-name">Existing Controls <span class="type-badge type-relationship">Relationship</span></div><div class="field-desc">Link existing controls to the risk using relationships. Controls are maintained centrally and can be associated with multiple risks.</div></div>
+                <div class="field-card phase-respond"><div class="field-num">16</div><div class="field-name">Action Plan <span class="type-badge type-paragraph">Paragraph</span></div><div class="field-desc">Describe the planned actions with target dates to further mitigate the risk. Each action plan follows the 5-step workflow: Open → Sent for Approval → Closed → Archived → Monitor.</div></div>
+                <div class="field-card phase-respond"><div class="field-num">17</div><div class="field-name">Action Plan Status <span class="type-badge type-dropdown">Dropdown</span></div><div class="field-desc">Track the lifecycle of each action plan: Open, Sent for Approval, Closed, Archived, Monitor</div></div>
+                <div class="field-card phase-respond"><div class="field-num">18</div><div class="field-name">Evidence / Attachment <span class="type-badge type-attachment">Attachment</span></div><div class="field-desc">Upload supporting evidence, documents, screenshots, or audit reports that validate the controls or action plan</div></div>
+                <div class="field-card phase-respond"><div class="field-num">19</div><div class="field-name">Risk Response Owner <span class="type-badge type-userlookup">User Lookup</span></div><div class="field-desc">Search and select the individual responsible for executing the risk action plan</div></div>
+                <div class="field-card phase-respond"><div class="field-num">20</div><div class="field-name">Response Strategy <span class="type-badge type-dropdown">Dropdown</span></div><div class="field-desc"><strong>Treat</strong> · <strong>Tolerate</strong> · <strong>Transfer</strong> · <strong>Terminate</strong> · <strong>Exploit</strong></div></div>
+                <div class="field-card phase-respond"><div class="field-num">21</div><div class="field-name">Status of Implementation <span class="type-badge type-dropdown">Dropdown</span></div><div class="field-desc">Implemented / Work in Progress / Not Implemented</div></div>
+                <div class="field-card phase-respond"><div class="field-num">22</div><div class="field-name">Target Date <span class="type-badge type-date">Date</span></div><div class="field-desc">Deadline for implementation of the action plan (DD-MMM-YY)</div></div>
+            </div>
+        </div>
+
+        <!-- ==================== PHASE 4: RESIDUAL ASSESSMENT ==================== -->
+        <div id="residual" class="phase-section">
+            <h2 class="section-title"><span class="icon">📉</span> Phase 4 — Residual Risk Assessment</h2>
+            <p style="margin-bottom:1rem;color:var(--text-light);">Re-score the risk AFTER considering the effectiveness of existing controls to determine the residual risk level.</p>
+
+            <div class="field-grid">
+                <div class="field-card phase-assess"><div class="field-num">23</div><div class="field-name">Residual Impact <span class="type-badge type-dropdown">Dropdown</span></div><div class="field-desc">Impact score after due consideration of existing controls and their effectiveness (1–5)</div></div>
+                <div class="field-card phase-assess"><div class="field-num">24</div><div class="field-name">Residual Likelihood <span class="type-badge type-dropdown">Dropdown</span></div><div class="field-desc">Likelihood score after due consideration of existing controls and their effectiveness (1–5)</div></div>
+                <div class="field-card phase-assess"><div class="field-num">25</div><div class="field-name">Residual Risk Score <span class="type-badge type-auto">Auto-Calculated</span></div><div class="field-desc"><strong>= (Residual Impact × Residual Likelihood) + Velocity</strong> — auto-calculated</div></div>
+                <div class="field-card phase-assess"><div class="field-num">26</div><div class="field-name">Residual Risk Rating <span class="type-badge type-dropdown">Select</span></div><div class="field-desc"><span class="badge badge-high">High ≥ 18</span> <span class="badge badge-medium">Medium 8–17</span> <span class="badge badge-low">Low/Acceptable < 8</span></div></div>
+                <div class="field-card phase-respond"><div class="field-num">27</div><div class="field-name">Reportable As <span class="type-badge type-dropdown">Dropdown</span></div><div class="field-desc">Functional Level risk or Entity Level risk</div></div>
+                <div class="field-card phase-respond"><div class="field-num">28</div><div class="field-name">Reportable To <span class="type-badge type-text">Text</span></div><div class="field-desc">Free-text field to specify the reporting audience (e.g., EC & RMC, Functional Review & DOR, Board)</div></div>
+            </div>
+        </div>
+
+        <!-- ==================== MONITOR & RE-ASSESSMENT ==================== -->
+        <div id="monitor" class="phase-section">
+            <h2 class="section-title"><span class="icon">👁️</span> Phase 5 — Monitor & Re-assessment</h2>
+            <p style="margin-bottom:1rem;color:var(--text-light);">Risks will be continuously monitored and re-assessed as needed to ensure controls remain effective and the risk profile stays current.</p>
+
+            <div class="field-grid">
+                <div class="field-card phase-identify" style="border-left-color:#8b5cf6;">
+                    <div class="field-num" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed);">7</div>
+                    <div class="field-name">Monitor & Re-assessment</div>
+                    <div class="field-desc">Risks will be monitored on an ongoing basis. Residual risk scores will be re-assessed as needed — triggered by changes in control effectiveness, business conditions, or risk environment. Escalation follows the governance structure.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== ARCHIVAL APPROVAL ==================== -->
+        <div id="archival" class="phase-section">
+            <h2 class="section-title"><span class="icon">📦</span> Phase 6 — Archival Approval</h2>
+            <p style="margin-bottom:1rem;color:var(--text-light);">Before a risk can be archived, it must go through a formal approval process with documented justification.</p>
+
+            <div class="field-grid">
+                <div class="field-card phase-identify" style="border-left-color:#f59e0b;">
+                    <div class="field-num" style="background:linear-gradient(135deg,#f59e0b,#d97706);">8a</div>
+                    <div class="field-name">Archival Approval</div>
+                    <div class="field-desc">Before archiving, the Risk Owner / Risk Champion must review and approve the archival request. This ensures no risk is archived without proper governance sign-off.</div>
+                </div>
+                <div class="field-card phase-identify" style="border-left-color:#f59e0b;">
+                    <div class="field-num" style="background:linear-gradient(135deg,#f59e0b,#d97706);">8b</div>
+                    <div class="field-name">Archival Rationale <span class="type-badge type-paragraph">Paragraph</span></div>
+                    <div class="field-desc">Mandatory justification for why the risk is being archived. Document the rationale — e.g., risk fully mitigated, risk accepted and within appetite, activity terminated, or risk no longer relevant due to changed business conditions.</div>
+                </div>
+                <div class="field-card phase-identify" style="border-left-color:#64748b;">
+                    <div class="field-num" style="background:linear-gradient(135deg,#64748b,#475569);">9</div>
+                    <div class="field-name">Archive</div>
+                    <div class="field-desc">Once approved, the risk is archived. Retained for audit trail. Archived risks can be reactivated if conditions change.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== ROLES & PERMISSIONS ==================== -->
+        <div id="roles" class="phase-section">
+            <h2 class="section-title"><span class="icon">🔐</span> Roles & Permissions</h2>
+            <p style="margin-bottom:1rem;color:var(--text-light);">The following matrix defines <strong>Read (R) / Write (W)</strong> permissions at each workflow stage. These permissions are configured in the <strong>Risk Manager → Roles Manager</strong> section and ensure data integrity and proper segregation of duties.</p>
+
+            <h3 style="margin:1.5rem 0 0.8rem;color:var(--primary);font-size:1.05rem;font-weight:800;">Permission Matrix by Workflow Stage</h3>
+            <table class="perm-table">
+                <thead>
+                    <tr>
+                        <th style="width:22%;">Role</th>
+                        <th>1. Identify</th>
+                        <th>2. Inherent Assessment</th>
+                        <th>3. Respond (Action Plan)</th>
+                        <th>4. Residual Assessment</th>
+                        <th>5. Approval</th>
+                        <th>6. Monitor</th>
+                        <th>7. Archive</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Risk Owner</td>
+                        <td><span class="perm-rw">R/W</span></td>
+                        <td><span class="perm-rw">R/W</span></td>
+                        <td><span class="perm-rw">R/W</span></td>
+                        <td><span class="perm-rw">R/W</span></td>
+                        <td><span class="perm-rw">R/W</span></td>
+                        <td><span class="perm-rw">R/W</span></td>
+                        <td><span class="perm-rw">R/W</span></td>
+                    </tr>
+                    <tr>
+                        <td>Risk Champion</td>
+                        <td><span class="perm-rw">R/W</span></td>
+                        <td><span class="perm-rw">R/W</span></td>
+                        <td><span class="perm-rw">R/W</span></td>
+                        <td><span class="perm-rw">R/W</span></td>
+                        <td><span class="perm-rw">R/W</span></td>
+                        <td><span class="perm-rw">R/W</span></td>
+                        <td><span class="perm-rw">R/W</span></td>
+                    </tr>
+                    <tr>
+                        <td>Risk Response Owner</td>
+                        <td><span class="perm-r">Read</span></td>
+                        <td><span class="perm-r">Read</span></td>
+                        <td><span class="perm-rw">R/W</span></td>
+                        <td><span class="perm-r">Read</span></td>
+                        <td><span class="perm-r">Read</span></td>
+                        <td><span class="perm-r">Read</span></td>
+                        <td><span class="perm-r">Read</span></td>
+                    </tr>
+                    <tr>
+                        <td>HOD (Head of Department)</td>
+                        <td><span class="perm-r">Read</span></td>
+                        <td><span class="perm-r">Read</span></td>
+                        <td><span class="perm-r">Read</span></td>
+                        <td><span class="perm-r">Read</span></td>
+                        <td><span class="perm-r">Read</span></td>
+                        <td><span class="perm-r">Read</span></td>
+                        <td><span class="perm-r">Read</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="note-box">
+                <strong>⚙️ Configuration:</strong> All roles and permissions are configured in <strong>Risk Manager → Roles Manager</strong>. Permissions can be customized per entity or function as needed.
+            </div>
+        </div>
+
+        <!-- ==================== GOVERNANCE ==================== -->
+        <div id="governance" class="phase-section">
+            <h2 class="section-title"><span class="icon">🏛️</span> Governance Structure</h2>
+            <p style="margin-bottom:1.2rem;color:var(--text-light);">Reporting flows upward; communication flows both ways.</p>
+
+            <div class="gov-layer gov-1">Board of Directors <span style="opacity:0.7;font-size:0.8rem;">— Annually</span></div>
+            <div class="gov-arrow">↑</div>
+            <div class="gov-layer gov-2">Risk Management Committee (RMC) <span style="opacity:0.7;font-size:0.8rem;">— Quarterly</span></div>
+            <div class="gov-arrow">↑</div>
+            <div class="gov-layer gov-3">Executive Committee (EC)* <span style="opacity:0.7;font-size:0.8rem;">— Quarterly</span></div>
+            <div class="gov-arrow">↑ ←← Risk Management Office (Global Head GRC, Head of Risk Mgmt, ERM Team)</div>
+            <div class="gov-layer gov-4">Respective ELT / Functional / Regional Heads <span style="font-size:0.8rem;">— Quarterly</span></div>
+            <div class="gov-arrow">↑</div>
+            <div class="gov-layer gov-5">Functional Risk Champions</div>
+            <div class="gov-arrow">↑</div>
+            <div class="gov-layer gov-5">Risk Owners &nbsp;&nbsp;|&nbsp;&nbsp; Response Owners</div>
+
+            <h3 style="margin:1.5rem 0 0.8rem;color:var(--primary);font-size:1rem;">EC* Composition</h3>
+            <table class="scale-table">
+                <thead><tr><th>#</th><th>Role</th></tr></thead>
+                <tbody>
+                    <tr><td>1</td><td>CEO & Managing Director</td></tr>
+                    <tr><td>2</td><td>CFO</td></tr>
+                    <tr><td>3</td><td>COO</td></tr>
+                    <tr><td>4</td><td>CDO</td></tr>
+                    <tr><td>5</td><td>CCO – AM</td></tr>
+                    <tr><td>6</td><td>CCO – EM</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        ERM Risk Register | Confidential
+    </div>
+
+    <script>
+        function showTab(tabId) {
+            document.querySelectorAll('.phase-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
