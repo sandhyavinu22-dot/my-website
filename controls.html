@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Biocon – Control</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-soft: #e0edff;
+      --border: #d4d4d8;
+      --border-soft: #e4e4e7;
+      --bg: #f5f5f7;
+      --text-main: #111827;
+      --text-muted: #6b7280;
+      --danger: #dc2626;
+      --radius-lg: 14px;
+      --radius-md: 10px;
+      --radius-pill: 999px;
+      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 24px 40px 40px;
+      background: radial-gradient(circle at top left, #eef2ff 0, #f9fafb 38%, #f4f4f5 100%);
+      color: var(--text-main);
+    }
+
+    .page-shell {
+      max-width: 1240px;
+      margin: 0 auto;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .page-header-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .page-title {
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pill-status {
+      padding: 2px 10px;
+      border-radius: var(--radius-pill);
+      background: #f3f4ff;
+      color: #4f46e5;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+    }
+
+    .page-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .meta-dot {
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: #9ca3af;
+      align-self: center;
+    }
+
+    .page-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn {
+      border-radius: var(--radius-pill);
+      padding: 7px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      border: 1px solid transparent;
+      background: white;
+      color: var(--text-main);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: white;
+      border-color: #1d4ed8;
+      box-shadow: 0 12px 30px rgba(37, 99, 235, 0.35);
+    }
+
+    .btn-outline {
+      border-color: var(--border);
+      background: rgba(255, 255, 255, 0.85);
+    }
+
+    .btn-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+
+    /* Workflow Bar */
+
+    .workflow-bar {
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-soft);
+      padding: 14px 18px;
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .workflow-steps {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: #f9fafb;
+      border: 1px solid transparent;
+      white-space: nowrap;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .step-index {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+      color: #4b5563;
+    }
+
+    .step-label {
+      font-weight: 500;
+    }
+
+    .step--active {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      border-color: rgba(37, 99, 235, 0.5);
+      color: white;
+    }
+
+    .step--active .step-index {
+      background: rgba(15, 23, 42, 0.08);
+      color: white;
+    }
+
+    .workflow-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      white-space: nowrap;
+    }
+
+    .workflow-chip {
+      padding: 3px 9px;
+      border-radius: var(--radius-pill);
+      background: #f3f4ff;
+      color: #4f46e5;
+      font-weight: 500;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* Tabs */
+
+    .tabs {
+      display: flex;
+      gap: 4px;
+      margin-top: 14px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .tab {
+      padding: 8px 14px;
+      font-size: 13px;
+      color: #6b7280;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tab--active {
+      color: #111827;
+      border-bottom-color: #2563eb;
+      font-weight: 600;
+    }
+
+    .tab-pill {
+      padding: 1px 7px;
+      border-radius: var(--radius-pill);
+      font-size: 10px;
+      background: #eef2ff;
+      color: #4f46e5;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+    }
+
+    /* Cards & fields */
+
+    .card {
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-soft);
+      padding: 18px 20px 18px;
+      border: 1px solid rgba(15, 23, 42, 0.03);
+      margin-bottom: 16px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .title-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #2563eb, #22c55e);
+    }
+
+    .tag-soft {
+      padding: 2px 9px;
+      border-radius: var(--radius-pill);
+      background: #eef2ff;
+      color: #4f46e5;
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .fields-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px 18px;
+      margin-top: 4px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .field-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: #374151;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .field-helper {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .required {
+      color: var(--danger);
+      margin-left: 2px;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    select,
+    textarea,
+    .lookup-input {
+      width: 100%;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      padding: 7px 10px;
+      font-size: 13px;
+      color: var(--text-main);
+      background: white;
+      outline: none;
+      transition: border-color 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+      min-height: 32px;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 96px;
+    }
+
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 8L10 12L14 8' stroke='%239CA3AF' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 9px center;
+      background-size: 15px;
+      padding-right: 28px;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus,
+    .lookup-input:focus-within {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.08);
+      background: #f9fafb;
+    }
+
+    /* Lookup pill */
+
+    .lookup-input {
+      padding: 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .lookup-avatar {
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #2563eb, #4f46e5);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+      margin-left: 8px;
+    }
+
+    .lookup-text {
+      flex: 1;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .lookup-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 6px;
+      color: #9ca3af;
+    }
+
+    /* Company Name block */
+
+    .company-block {
+      margin: 16px 0 6px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(37, 99, 235, 0.07), rgba(37, 99, 235, 0));
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border: 1px solid rgba(129, 140, 248, 0.18);
+    }
+
+    .company-index {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      background: linear-gradient(145deg, #2563eb, #4f46e5);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .company-main {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .company-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .company-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .company-badge {
+      padding: 2px 10px;
+      border-radius: var(--radius-pill);
+      background: #ecfdf3;
+      color: #16a34a;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.11em;
+    }
+
+    .company-helper {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .company-tree-placeholder {
+      margin-left: auto;
+      font-size: 11px;
+      color: #4b5563;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: white;
+      border: 1px dashed #cbd5f5;
+      white-space: nowrap;
+    }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px 18px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 900px) {
+      body {
+        padding: 18px 16px 32px;
+      }
+      .fields-grid,
+      .score-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="page-shell">
+
+  <!-- HEADER -->
+  <header class="page-header">
+    <div class="page-header-left">
+      <div class="page-title">
+        <span>Control – Biocon</span>
+        <span class="pill-status">Draft</span>
+      </div>
+      <div class="page-subtitle">
+        <span>ID: 1</span>
+        <span class="meta-dot"></span>
+        <span>Created at: 08/04/2026 09:57</span>
+        <span class="meta-dot"></span>
+        <span>Created by: Sandhya Kumar</span>
+        <span class="meta-dot"></span>
+        <span>Updated at: 09/04/2026 11:20</span>
+      </div>
+    </div>
+    <div class="page-header-actions">
+      <button class="btn btn-outline">Cancel</button>
+      <button class="btn btn-primary">Save</button>
+      <button class="btn-icon" aria-label="More actions">⋯</button>
+    </div>
+  </header>
+
+  <!-- WORKFLOW -->
+  <section class="workflow-bar">
+    <div class="workflow-steps">
+      <div class="step step--active">
+        <div class="step-index">1</div>
+        <div class="step-label">Draft</div>
+      </div>
+      <div class="step">
+        <div class="step-index">2</div>
+        <div class="step-label">Identification</div>
+      </div>
+      <div class="step">
+        <div class="step-index">3</div>
+        <div class="step-label">Implementation</div>
+      </div>
+      <div class="step">
+        <div class="step-index">4</div>
+        <div class="step-label">Analysis</div>
+      </div>
+      <div class="step">
+        <div class="step-index">5</div>
+        <div class="step-label">Assessment</div>
+      </div>
+      <div class="step">
+        <div class="step-index">6</div>
+        <div class="step-label">Testing</div>
+      </div>
+      <div class="step">
+        <div class="step-index">7</div>
+        <div class="step-label">Approval</div>
+      </div>
+      <div class="step">
+        <div class="step-index">8</div>
+        <div class="step-label">Monitoring</div>
+      </div>
+      <div class="step">
+        <div class="step-index">9</div>
+        <div class="step-label">Archive</div>
+      </div>
+    </div>
+    <div class="workflow-meta">
+      <span class="workflow-chip">Control Workflow</span>
+      <span>Status: <strong>Draft</strong></span>
+    </div>
+  </section>
+
+  <!-- SUB-TABS -->
+  <nav class="tabs">
+    <div class="tab tab--active">
+      <span>Details</span>
+      <span class="tab-pill">Parent Control</span>
+    </div>
+    <div class="tab">
+      <span>Relationships</span>
+    </div>
+    <div class="tab">
+      <span>Issues</span>
+    </div>
+  </nav>
+
+  <!-- CONTROL DETAILS (includes former CSA fields) -->
+  <section class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <span class="title-dot"></span>
+        <span>Control Details</span>
+      </div>
+      <span class="tag-soft">Biocon Configuration</span>
+    </div>
+
+    <div class="fields-grid">
+      <div class="field">
+        <label class="field-label">
+          Control Name<span class="required">*</span>
+        </label>
+        <input type="text" placeholder="Enter control name" />
+      </div>
+      <div class="field">
+        <label class="field-label">
+          Control ID
+        </label>
+        <input type="text" placeholder="Auto generated or user defined" />
+      </div>
+
+      <div class="field" style="grid-column: 1 / -1;">
+        <label class="field-label">
+          Control Description
+        </label>
+        <textarea placeholder="Describe the control, including objective, scope and key activities."></textarea>
+      </div>
+
+      <!-- Standard Diligent control attributes -->
+      <div class="field">
+        <label class="field-label">
+          Prevent / Detect
+        </label>
+        <select>
+          <option value="" disabled selected>Select...</option>
+          <option>Prevent</option>
+          <option>Detect</option>
+          <option>N/A</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label class="field-label">
+          Control Method
+        </label>
+        <select>
+          <option value="" disabled selected>Select...</option>
+          <option>Authorization</option>
+          <option>Management Review</option>
+          <option>Reconciliation</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label class="field-label">
+          Control Status
+        </label>
+        <select>
+          <option value="" disabled selected>Select...</option>
+          <option>Key Control</option>
+          <option>Non Key Control</option>
+          <option>Obsolete</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label class="field-label">
+          Control Frequency
+        </label>
+        <select>
+          <option value="" disabled selected>Select...</option>
+          <option>Continuous</option>
+          <option>Multiple Times Daily</option>
+          <option>Daily</option>
+          <option>Weekly</option>
+          <option>Bi-Weekly</option>
+          <option>Monthly</option>
+          <option>Quarterly</option>
+          <option>Semi-Annually</option>
+          <option>Annually</option>
+          <option>As Needed</option>
+          <option>Unassigned</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label class="field-label">
+          Control Type
+        </label>
+        <select>
+          <option value="" disabled selected>Select...</option>
+          <option>Manual Control</option>
+          <option>Application/System Control</option>
+          <option>IT Dependent Manual Control</option>
+          <option>IT General Control</option>
+        </select>
+      </div>
+
+      <!-- Former child-record fields now on parent -->
+      <div class="field">
+        <label class="field-label">
+          Process<span class="required">*</span>
+        </label>
+        <select>
+          <option value="" disabled selected>Select...</option>
+          <option>ENVIRONMENT HEALTH AND SAFETY</option>
+          <option>FIXED ASSETS</option>
+          <option>GENERAL ACCOUNTING &amp; REPORTING</option>
+          <option>HUMAN RESOURCES</option>
+          <option>INFORMATION TECHNOLOGY PROCESSES</option>
+          <option>INVENTORY MANAGEMENT &amp; PRODUCTION</option>
+          <option>LEGAL</option>
+          <option>ORDER TO CASH</option>
+          <option>OTHERS</option>
+          <option>PURCHASE TO PAY</option>
+          <option>TAXATION</option>
+          <option>TREASURY</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label class="field-label">
+          Sub Process<span class="required">*</span>
+        </label>
+        <select>
+          <option value="" disabled selected>Select...</option>
+          <option>Application Life Cycle Management</option>
+          <option>Asset Management</option>
+          <option>Attendance &amp; Payroll processing (including F&amp;F)</option>
+          <option>Backup and Restoration Management</option>
+          <option>Biocon Foundation</option>
+          <option>Biomass management</option>
+          <option>Borrowings</option>
+          <option>Budgeting and Variance Analysis</option>
+          <option>Canteen Expense Review</option>
+          <option>Capex Proposal and approval (including Post Governance)</option>
+          <option>Cash and Bank Management</option>
+          <option>Change Management</option>
+          <option>Compliance Management</option>
+          <option>Consumables</option>
+          <option>Contract Labour</option>
+          <option>Customer Master (NBFI)</option>
+          <option>Employee Master Data Management(BFI &amp; NBFI)</option>
+          <option>Goods Receipt and Quality Check(Including returns)</option>
+          <option>GTN process (Accruals)</option>
+          <option>Hedging</option>
+          <option>IMS (Integrated Management System)</option>
+          <option>Incident Management</option>
+          <option>Indirect Taxation (Covering GST)</option>
+          <option>Invoice Processing</option>
+          <option>Invoicing and Sales Returns (NBFI)</option>
+          <option>Interns Process</option>
+          <option>Inventory Valuation</option>
+          <option>IT Disaster Recovery (Incl Data Centre Operations)</option>
+          <option>IT Risk Committee</option>
+          <option>IT Security Management</option>
+          <option>Journal processing , Accruals and Provisions</option>
+          <option>Learning and Organisational Development</option>
+          <option>Logical Access Management - IT</option>
+          <option>Logical Access Management -SAP</option>
+          <option>Manufacturing and Quality Check</option>
+          <option>Material Master Maintenance</option>
+          <option>Payment Processing</option>
+          <option>Period close and reporting (including consolidation and MIS)</option>
+          <option>Physical Access Management</option>
+          <option>Plant Maintenance</option>
+          <option>PR/PO Management</option>
+          <option>Procurement or Construction of Fixed Assets (including capitalisation)</option>
+          <option>R&amp;D -Asset Management and Utilisation</option>
+          <option>Receipt from Debtors and Cash Collection(including collection follow up)</option>
+          <option>Retiral of assets, Utilisation, Depreciation &amp; Physical Verification</option>
+          <option>Sale Order Management(NBFI)</option>
+          <option>Scrap and Safety Management</option>
+          <option>Sourcing, Recruitment &amp; Placement process</option>
+          <option>Sourcing, Recruitment &amp; Placement process BFI</option>
+          <option>Transportation Management</option>
+          <option>Travel &amp; Expenditure</option>
+          <option>USD Management</option>
+          <option>Vendor Evaluation (CE)</option>
+          <option>Vendor Evaluation - 3P manufacturing</option>
+          <option>Vendor Evaluation - IT</option>
+          <option>Vendor Evaluation - SMBU</option>
+          <option>Vendor Evaluation(RM &amp; PM)</option>
+          <option>Vendor Master Maintenance</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label class="field-label">
+          Effective Date<span class="required">*</span>
+        </label>
+        <input type="date" />
+      </div>
+
+      <div class="field">
+        <label class="field-label">
+          Assessment Period
+        </label>
+        <input type="text" placeholder="e.g. FY 2025-26 / Q1 2026" />
+      </div>
+
+      <div class="field">
+        <label class="field-label">
+          Control Owner<span class="required">*</span>
+          <span class="field-helper">User lookup</span>
+        </label>
+        <div class="lookup-input">
+          <div class="lookup-avatar">CO</div>
+          <div class="lookup-text">Search or select control owner…</div>
+          <div class="lookup-icon">⌕</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">
+          HOD<span class="required">*</span>
+          <span class="field-helper">User lookup</span>
+        </label>
+        <div class="lookup-input">
+          <div class="lookup-avatar">HD</div>
+          <div class="lookup-text">Search or select HOD…</div>
+          <div class="lookup-icon">⌕</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Company Name (entity tree) -->
+    <div class="company-block">
+      <div class="company-index">3</div>
+      <div class="company-main">
+        <div class="company-line">
+          <span class="company-label">Company Name</span>
+          <span class="company-badge">Multi-Select Tree</span>
+        </div>
+        <div class="company-helper">
+          Select one or more applicable entities from the organizational hierarchy tree (multi-select enabled).
+        </div>
+      </div>
+      <div class="company-tree-placeholder">
+        Entity group structure widget placeholder
+      </div>
+    </div>
+
+    <!-- Score -->
+    <section style="margin-top: 16px;">
+      <div class="card-header" style="padding: 0; margin-bottom: 6px;">
+        <div class="card-title">
+          <span class="title-dot"></span>
+          <span>Score</span>
+        </div>
+      </div>
+
+      <div class="score-grid">
+        <div class="field">
+          <label class="field-label">
+            Design Effectiveness
+            <span class="field-helper">Default Diligent values</span>
+          </label>
+          <select>
+            <option value="" disabled selected>Select...</option>
+            <option>Effective</option>
+            <option>Partially Effective</option>
+            <option>Ineffective</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="field-label">
+            Operating Effectiveness<span class="required">*</span>
+            <span class="field-helper">Renamed from “Control Effectiveness”</span>
+          </label>
+          <select>
+            <option value="" disabled selected>Select...</option>
+            <option>Operating Effectively</option>
+            <option>Exceptions Noted</option>
+            <option>Operating Effectively With Scope of improvement</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+  </section>
+
+</div>
+</body>
+</html>
