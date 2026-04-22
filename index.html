@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -558,15 +559,161 @@
             <h2 class="section-title"><span class="icon">📊</span> Phase 2 — Inherent (Gross) Risk Assessment</h2>
             <p style="margin-bottom:1rem;color:var(--text-light);">Score the risk BEFORE any controls are applied to determine its inherent severity.</p>
 
+            <!-- ========= FINANCIAL CAPITAL SECTION ========= -->
+            <h3 style="margin:1.5rem 0 0.8rem;color:var(--primary);font-size:1rem;">Financial Capital</h3>
             <div class="field-grid">
-                <div class="field-card phase-assess"><div class="field-num">10a</div><div class="field-name">Financial Capital Impact <span class="type-badge type-dropdown">Dropdown</span></div><div class="field-desc">Impact on financial performance — Very Low (1) to Very High (5)</div></div>
-                <div class="field-card phase-assess"><div class="field-num">10b</div><div class="field-name">Compliance Capital Impact <span class="type-badge type-dropdown">Dropdown</span></div><div class="field-desc">Impact on regulatory & legal compliance — Very Low (1) to Very High (5)</div></div>
-                <div class="field-card phase-assess"><div class="field-num">10c</div><div class="field-name">Human Capital Impact <span class="type-badge type-dropdown">Dropdown</span></div><div class="field-desc">Impact on people, safety, and workforce — Very Low (1) to Very High (5)</div></div>
-                <div class="field-card phase-assess"><div class="field-num">10d</div><div class="field-name">Natural Capital Impact <span class="type-badge type-dropdown">Dropdown</span></div><div class="field-desc">Impact on environmental and natural resources — Very Low (1) to Very High (5)</div></div>
-                <div class="field-card phase-assess"><div class="field-num">10e</div><div class="field-name">Intellectual Capital Impact <span class="type-badge type-dropdown">Dropdown</span></div><div class="field-desc">Impact on intellectual property, R&D, and knowledge assets — Very Low (1) to Very High (5)</div></div>
-                <div class="field-card phase-assess" style="border-left-width:6px;border-left-color:#f59e0b;"><div class="field-num" style="background:linear-gradient(135deg,#f59e0b,#d97706);">10</div><div class="field-name">Final Impact Score <span class="type-badge type-auto">Auto-Calculated</span></div><div class="field-desc"><strong>Highest among 10a–10e.</strong> The maximum impact score across all five capitals is used as the final Impact.</div></div>
+                <div class="field-card phase-assess">
+                    <div class="field-num">10a-1</div>
+                    <div class="field-name">
+                        Total Revenue Impact
+                        <span class="type-badge type-dropdown">Dropdown</span>
+                    </div>
+                    <div class="field-desc">
+                        Score the impact on <strong>Total Revenue</strong> using a 5-point dropdown
+                        (Very Low, Low, Medium, High, Very High). The detailed percentage
+                        bands from the Financial Capital Risk Impact Scale
+                        (e.g., reduction of targeted revenue by ≤ 1.5%, &gt; 1.5%–3%,
+                        &gt; 3%–5%, &gt; 5%–7.5%, &gt; 7.5%) will be provided for reference
+                        as a tooltip on the <strong>Financial Capital Impact</strong> field.
+                    </div>
+                </div>
+
+                <div class="field-card phase-assess">
+                    <div class="field-num">10a-2</div>
+                    <div class="field-name">
+                        EBITDA Impact
+                        <span class="type-badge type-dropdown">Dropdown</span>
+                    </div>
+                    <div class="field-desc">
+                        Score the impact on <strong>EBITDA</strong> using the same
+                        5-point dropdown (Very Low, Low, Medium, High, Very High). The
+                        underlying ranges (e.g., reduction of targeted EBITDA by ≤ 4%,
+                        &gt; 4%–8%, &gt; 8%–12%, &gt; 12%–16%, &gt; 16%) will be captured
+                        as descriptive text in the tooltip attached to
+                        <strong>Financial Capital Impact</strong>, not repeated here.
+                    </div>
+                </div>
+
+                <div class="field-card phase-assess">
+                    <div class="field-num">10a-3</div>
+                    <div class="field-name">
+                        Leverage (Net Debt / EBITDA) Impact
+                        <span class="type-badge type-dropdown">Dropdown</span>
+                    </div>
+                    <div class="field-desc">
+                        Score the impact on <strong>Leverage (Net debt to EBITDA, medium term)</strong>
+                        using the 5-point dropdown (Very Low, Low, Medium, High, Very High). The reference
+                        thresholds (e.g., ≤ 1x, &gt; 1–2x, &gt; 2–3x, &gt; 3–4x, &gt; 4x)
+                        will also be provided for reference as a tooltip against the
+                        <strong>Financial Capital Impact</strong> field.
+                    </div>
+                </div>
+
+                <div class="field-card phase-assess">
+                    <div class="field-num">10a</div>
+                    <div class="field-name">
+                        Financial Capital Impact
+                        <span class="type-badge type-dropdown">Dropdown</span>
+                    </div>
+                    <div class="field-desc">
+                        Overall inherent impact on <strong>Financial Capital</strong> on a 5-point scale
+                        (Very Low, Low, Medium, High, Very High). A tooltip on this field will
+                        consolidate all reference descriptions from the Financial Capital Risk Impact
+                        Scale (Total Revenue, EBITDA and Leverage parameter bands) so that the
+                        assessor can view the detailed criteria while selecting the impact level.
+                    </div>
+                </div>
+
+                <div class="field-card phase-assess">
+                    <div class="field-num">10a-4</div>
+                    <div class="field-name">
+                        Risk Appetite / Tolerance
+                        <span class="type-badge type-dropdown">Dropdown</span>
+                    </div>
+                    <div class="field-desc">
+                        Auto-populated classification based on Financial Capital impact and thresholds:
+                        <strong>Within risk appetite</strong>,
+                        <strong>Risk appetite breached, but within risk tolerance</strong>, or
+                        <strong>Risk tolerance breached</strong>. This field will be calculated
+                        along with the <strong>Final Impact Score</strong> after considering the
+                        values recorded against each of the capital impact fields (10a–10e).
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========= MULTI-CAPITAL FIELDS ========= -->
+            <h3 style="margin:1.5rem 0 0.8rem;color:var(--primary);font-size:1rem;">Multi-Capital Inherent Assessment</h3>
+            <p style="margin:-0.4rem 0 0.8rem;color:var(--text-light);font-size:0.88rem;">
+                For all capitals (Financial, Compliance, Human, Natural, Intellectual), inherent impact will be
+                scored through parameter-based 5-point dropdowns (Very Low to Very High), with underlying criteria
+                documented as reference tooltips. Capital-specific risk appetite and tolerance thresholds will be
+                configured so that appetite / threshold calculations can be performed consistently across each capital
+                and fed into the overall Final Impact Score.
+            </p>
+            <div class="field-grid">
+                <div class="field-card phase-assess">
+                    <div class="field-num">10b</div>
+                    <div class="field-name">
+                        Compliance Capital Impact
+                        <span class="type-badge type-dropdown">Dropdown</span>
+                    </div>
+                    <div class="field-desc">
+                        Impact on regulatory &amp; legal compliance — Very Low (1) to Very High (5),
+                        using parameter-based scoring with capital-specific appetite and tolerance
+                        thresholds similar to Financial Capital.
+                    </div>
+                </div>
+                <div class="field-card phase-assess">
+                    <div class="field-num">10c</div>
+                    <div class="field-name">
+                        Human Capital Impact
+                        <span class="type-badge type-dropdown">Dropdown</span>
+                    </div>
+                    <div class="field-desc">
+                        Impact on people, safety, and workforce — Very Low (1) to Very High (5),
+                        with parameter-based scoring and defined appetite / tolerance thresholds
+                        for Human Capital.
+                    </div>
+                </div>
+                <div class="field-card phase-assess">
+                    <div class="field-num">10d</div>
+                    <div class="field-name">
+                        Natural Capital Impact
+                        <span class="type-badge type-dropdown">Dropdown</span>
+                    </div>
+                    <div class="field-desc">
+                        Impact on environmental and natural resources — Very Low (1) to Very High (5),
+                        supported by parameter-based scoring and Natural Capital appetite /
+                        tolerance thresholds.
+                    </div>
+                </div>
+                <div class="field-card phase-assess">
+                    <div class="field-num">10e</div>
+                    <div class="field-name">
+                        Intellectual Capital Impact
+                        <span class="type-badge type-dropdown">Dropdown</span>
+                    </div>
+                    <div class="field-desc">
+                        Impact on intellectual property, R&amp;D, and knowledge assets — Very Low (1)
+                        to Very High (5), with parameter-based scoring and appetite / tolerance
+                        thresholds defined for Intellectual Capital.
+                    </div>
+                </div>
+                <div class="field-card phase-assess" style="border-left-width:6px;border-left-color:#f59e0b;">
+                    <div class="field-num" style="background:linear-gradient(135deg,#f59e0b,#d97706);">10</div>
+                    <div class="field-name">
+                        Final Impact Score
+                        <span class="type-badge type-auto">Auto-Calculated</span>
+                    </div>
+                    <div class="field-desc">
+                        <strong>Highest among 10a–10e.</strong> The maximum impact score across all five capitals is
+                        used as the final Impact. This also drives the automatic population of the
+                        <strong>Risk Appetite / Tolerance</strong> outcome based on the appetite and tolerance
+                        thresholds configured for each capital.
+                    </div>
+                </div>
                 <div class="field-card phase-assess"><div class="field-num">11</div><div class="field-name">Inherent Likelihood (1–5) <span class="type-badge type-dropdown">Dropdown</span></div><div class="field-desc">Probability of occurrence — Unlikely 1%–20% (1), Rare 21%–40% (2), Possible 41%–60% (3), Likely 61%–80% (4), Almost Certain 81%–99% (5)</div></div>
-                <div class="field-card phase-assess"><div class="field-num">12</div><div class="field-name">Velocity (1–5) <span class="type-badge type-dropdown">Dropdown</span></div><div class="field-desc">Speed of impact — Very slow / over a year (1), Several months to a year (2), Few months to a quarter (3), Days to few weeks (4), Very rapid / few hours to days (5)</div></div>
+                <div class="field-card phase-assess"><div class="field-num">12</div><div class="field-name">Velocity (1–5) <span class="type-badge type-dropdown">Dropdown</span></div><div class="field-desc">Speed of impact — Very slow / over a year (1), Several months to a year (2), Few months to a quarter (3), Days to few weeks (4), Very rapid — few hours to days (5)</div></div>
                 <div class="field-card phase-assess"><div class="field-num">13</div><div class="field-name">Inherent Risk Score <span class="type-badge type-auto">Auto-Calculated</span></div><div class="field-desc"><strong>= (Impact × Likelihood) + Velocity</strong> — auto-calculated</div></div>
                 <div class="field-card phase-assess"><div class="field-num">14</div><div class="field-name">Inherent Risk Rating <span class="type-badge type-dropdown">Select</span></div><div class="field-desc"><span class="badge badge-high">High ≥ 18</span> <span class="badge badge-medium">Medium 8–17</span> <span class="badge badge-low">Low/Acceptable < 8</span></div></div>
             </div>
@@ -599,7 +746,6 @@
             <h2 class="section-title"><span class="icon">🛡️</span> Phase 3 — Respond (Risk Mitigation)</h2>
             <p style="margin-bottom:1rem;color:var(--text-light);">Risk mitigation details are captured here as <strong>Action Plans</strong>. Existing controls can be linked using <strong>Relationships</strong>.</p>
 
-            <!-- Risk Mitigation Workflow at the TOP -->
             <h3 style="margin:0.5rem 0 0.8rem;color:var(--primary);font-size:1.05rem;font-weight:800;">Risk Mitigation Workflow</h3>
             <div class="ap-workflow">
                 <div class="ap-step ap-open">
@@ -621,7 +767,6 @@
                     <div class="ap-step-title">4. ARCHIVED</div>
                     <div class="ap-step-desc">Completed action plan archived for audit trail</div>
                 </div>
-
             </div>
 
             <div class="note-box">
@@ -643,15 +788,225 @@
         <!-- ==================== PHASE 4: RESIDUAL ASSESSMENT ==================== -->
         <div id="residual" class="phase-section">
             <h2 class="section-title"><span class="icon">📉</span> Phase 4 — Residual Risk Assessment</h2>
-            <p style="margin-bottom:1rem;color:var(--text-light);">Re-score the risk AFTER considering the effectiveness of existing controls to determine the residual risk level.</p>
+            <p style="margin-bottom:1rem;color:var(--text-light);">
+                Re-score the risk AFTER considering the effectiveness of existing controls to determine the residual risk level.
+            </p>
 
+            <!-- ========= RESIDUAL – FINANCIAL CAPITAL SECTION ========= -->
+            <h3 style="margin:1.5rem 0 0.8rem;color:var(--primary);font-size:1rem;">Financial Capital</h3>
             <div class="field-grid">
-                <div class="field-card phase-assess"><div class="field-num">23</div><div class="field-name">Residual Impact <span class="type-badge type-dropdown">Dropdown</span></div><div class="field-desc">Impact score after due consideration of existing controls and their effectiveness (1–5)</div></div>
-                <div class="field-card phase-assess"><div class="field-num">24</div><div class="field-name">Residual Likelihood <span class="type-badge type-dropdown">Dropdown</span></div><div class="field-desc">Likelihood score after due consideration of existing controls and their effectiveness (1–5)</div></div>
-                <div class="field-card phase-assess"><div class="field-num">25</div><div class="field-name">Residual Risk Score <span class="type-badge type-auto">Auto-Calculated</span></div><div class="field-desc"><strong>= (Residual Impact × Residual Likelihood) + Velocity</strong> — auto-calculated</div></div>
-                <div class="field-card phase-assess"><div class="field-num">26</div><div class="field-name">Residual Risk Rating <span class="type-badge type-dropdown">Select</span></div><div class="field-desc"><span class="badge badge-high">High ≥ 18</span> <span class="badge badge-medium">Medium 8–17</span> <span class="badge badge-low">Low/Acceptable < 8</span></div></div>
-                <div class="field-card phase-respond"><div class="field-num">27</div><div class="field-name">Reportable As <span class="type-badge type-dropdown">Dropdown</span></div><div class="field-desc">Functional Level risk or Entity Level risk</div></div>
-                <div class="field-card phase-respond"><div class="field-num">28</div><div class="field-name">Reportable To <span class="type-badge type-text">Text</span></div><div class="field-desc">Free-text field to specify the reporting audience (e.g., EC & RMC, Functional Review & DOR, Board)</div></div>
+                <div class="field-card phase-assess">
+                    <div class="field-num">23a-1</div>
+                    <div class="field-name">
+                        Residual Total Revenue Impact
+                        <span class="type-badge type-dropdown">Dropdown</span>
+                    </div>
+                    <div class="field-desc">
+                        Score the <strong>residual</strong> impact on Total Revenue on a 5-point dropdown
+                        (Very Low, Low, Medium, High, Very High), after factoring in the effectiveness of
+                        existing controls and treatment actions. The same percentage bands used for inherent
+                        assessment (e.g., ≤ 1.5%, &gt; 1.5%–3%, &gt; 3%–5%, &gt; 5%–7.5%, &gt; 7.5%) will be
+                        available as reference text via a tooltip on the
+                        <strong>Residual Financial Capital Impact</strong> field.
+                    </div>
+                </div>
+
+                <div class="field-card phase-assess">
+                    <div class="field-num">23a-2</div>
+                    <div class="field-name">
+                        Residual EBITDA Impact
+                        <span class="type-badge type-dropdown">Dropdown</span>
+                    </div>
+                    <div class="field-desc">
+                        Score the <strong>residual</strong> impact on EBITDA using the same 5-point dropdown
+                        (Very Low, Low, Medium, High, Very High). The underlying EBITDA ranges
+                        (≤ 4%, &gt; 4%–8%, &gt; 8%–12%, &gt; 12%–16%, &gt; 16%) are also provided as
+                        reference in the tooltip attached to the
+                        <strong>Residual Financial Capital Impact</strong> field.
+                    </div>
+                </div>
+
+                <div class="field-card phase-assess">
+                    <div class="field-num">23a-3</div>
+                    <div class="field-name">
+                        Residual Leverage (Net Debt / EBITDA) Impact
+                        <span class="type-badge type-dropdown">Dropdown</span>
+                    </div>
+                    <div class="field-desc">
+                        Score the <strong>residual</strong> impact on Leverage (Net debt to EBITDA, medium term)
+                        using the 5-point dropdown (Very Low, Low, Medium, High, Very High). The same reference
+                        thresholds (≤ 1x, &gt; 1–2x, &gt; 2–3x, &gt; 3–4x, &gt; 4x) will be available as a
+                        tooltip on the <strong>Residual Financial Capital Impact</strong> field.
+                    </div>
+                </div>
+
+                <div class="field-card phase-assess">
+                    <div class="field-num">23a</div>
+                    <div class="field-name">
+                        Residual Financial Capital Impact
+                        <span class="type-badge type-dropdown">Dropdown</span>
+                    </div>
+                    <div class="field-desc">
+                        Overall <strong>residual</strong> impact on Financial Capital on a 5-point scale
+                        (Very Low, Low, Medium, High, Very High). A tooltip on this field consolidates all
+                        reference descriptions from the Financial Capital Risk Impact Scale (Total Revenue,
+                        EBITDA and Leverage parameter bands) to guide the assessor while selecting the
+                        residual impact level.
+                    </div>
+                </div>
+
+                <div class="field-card phase-assess">
+                    <div class="field-num">23a-4</div>
+                    <div class="field-name">
+                        Residual Risk Appetite / Tolerance
+                        <span class="type-badge type-dropdown">Dropdown</span>
+                    </div>
+                    <div class="field-desc">
+                        Auto-populated classification based on the <strong>residual Financial Capital</strong>
+                        position and thresholds:
+                        <strong>Within risk appetite</strong>,
+                        <strong>Risk appetite breached, but within risk tolerance</strong>, or
+                        <strong>Risk tolerance breached</strong>. This value is derived together with the
+                        residual impact assessment after considering the values recorded against each of the
+                        capital impact fields (23a–23e).
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========= RESIDUAL MULTI-CAPITAL FIELDS ========= -->
+            <h3 style="margin:1.5rem 0 0.8rem;color:var(--primary);font-size:1rem;">Multi-Capital Residual Assessment</h3>
+            <p style="margin:-0.4rem 0 0.8rem;color:var(--text-light);font-size:0.88rem;">
+                For <strong>all capitals</strong> (Financial, Compliance, Human, Natural, Intellectual),
+                <strong>residual</strong> impact will be scored through parameter-based 5-point dropdowns
+                (Very Low to Very High), with the underlying criteria captured as reference tooltips.
+                Capital-specific <strong>residual risk appetite and tolerance thresholds</strong> will be
+                configured so that appetite / threshold calculations can be applied consistently to each
+                capital and rolled up into the overall residual impact and risk assessment.
+            </p>
+            <div class="field-grid">
+                <div class="field-card phase-assess">
+                    <div class="field-num">23b</div>
+                    <div class="field-name">
+                        Residual Compliance Capital Impact
+                        <span class="type-badge type-dropdown">Dropdown</span>
+                    </div>
+                    <div class="field-desc">
+                        Residual impact on regulatory &amp; legal compliance — Very Low (1) to Very High (5),
+                        using parameter-based scoring and Compliance-specific appetite / tolerance thresholds.
+                    </div>
+                </div>
+
+                <div class="field-card phase-assess">
+                    <div class="field-num">23c</div>
+                    <div class="field-name">
+                        Residual Human Capital Impact
+                        <span class="type-badge type-dropdown">Dropdown</span>
+                    </div>
+                    <div class="field-desc">
+                        Residual impact on people, safety, and workforce — Very Low (1) to Very High (5),
+                        supported by Human Capital-specific parameters and appetite / tolerance thresholds.
+                    </div>
+                </div>
+
+                <div class="field-card phase-assess">
+                    <div class="field-num">23d</div>
+                    <div class="field-name">
+                        Residual Natural Capital Impact
+                        <span class="type-badge type-dropdown">Dropdown</span>
+                    </div>
+                    <div class="field-desc">
+                        Residual impact on environmental and natural resources — Very Low (1) to Very High (5),
+                        with Natural Capital parameters and associated appetite / tolerance thresholds.
+                    </div>
+                </div>
+
+                <div class="field-card phase-assess">
+                    <div class="field-num">23e</div>
+                    <div class="field-name">
+                        Residual Intellectual Capital Impact
+                        <span class="type-badge type-dropdown">Dropdown</span>
+                    </div>
+                    <div class="field-desc">
+                        Residual impact on intellectual property, R&amp;D, and knowledge assets — Very Low (1)
+                        to Very High (5), using parameter-based scoring and Intellectual Capital appetite /
+                        tolerance thresholds.
+                    </div>
+                </div>
+
+                <div class="field-card phase-assess">
+                    <div class="field-num">23</div>
+                    <div class="field-name">
+                        Residual Impact (Overall)
+                        <span class="type-badge type-dropdown">Dropdown</span>
+                    </div>
+                    <div class="field-desc">
+                        Overall <strong>residual impact score (1–5)</strong> selected by the assessor, typically
+                        aligned to the highest residual impact across capitals (23a–23e) and informed by
+                        capital-level appetite / tolerance thresholds.
+                    </div>
+                </div>
+
+                <div class="field-card phase-assess">
+                    <div class="field-num">24</div>
+                    <div class="field-name">
+                        Residual Likelihood (1–5)
+                        <span class="type-badge type-dropdown">Dropdown</span>
+                    </div>
+                    <div class="field-desc">
+                        Likelihood of occurrence <strong>after</strong> considering controls — Very Low (1) to
+                        Very High (5), using the same probability bands as inherent but reassessed in light
+                        of treatment effectiveness.
+                    </div>
+                </div>
+
+                <div class="field-card phase-assess">
+                    <div class="field-num">25</div>
+                    <div class="field-name">
+                        Residual Risk Score
+                        <span class="type-badge type-auto">Auto-Calculated</span>
+                    </div>
+                    <div class="field-desc">
+                        <strong>= (Residual Impact × Residual Likelihood) + Velocity</strong> — auto-calculated
+                        using the selected Residual Impact (23), Residual Likelihood (24) and the Velocity score
+                        from Phase 2.
+                    </div>
+                </div>
+
+                <div class="field-card phase-assess">
+                    <div class="field-num">26</div>
+                    <div class="field-name">
+                        Residual Risk Rating
+                        <span class="type-badge type-dropdown">Select</span>
+                    </div>
+                    <div class="field-desc">
+                        <span class="badge badge-high">High ≥ 18</span>
+                        <span class="badge badge-medium">Medium 8–17</span>
+                        <span class="badge badge-low">Low/Acceptable &lt; 8</span>
+                        — mapped from the Residual Risk Score to indicate the final residual risk level.
+                    </div>
+                </div>
+
+                <div class="field-card phase-respond">
+                    <div class="field-num">27</div>
+                    <div class="field-name">
+                        Reportable As
+                        <span class="type-badge type-dropdown">Dropdown</span>
+                    </div>
+                    <div class="field-desc">
+                        Functional Level risk or Entity Level risk
+                    </div>
+                </div>
+
+                <div class="field-card phase-respond">
+                    <div class="field-num">28</div>
+                    <div class="field-name">
+                        Reportable To
+                        <span class="type-badge type-text">Text</span>
+                    </div>
+                    <div class="field-desc">
+                        Free-text field to specify the reporting audience (e.g., EC &amp; RMC, Functional Review &amp; DOR, Board)
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -808,3 +1163,4 @@
     </script>
 </body>
 </html>
+```
